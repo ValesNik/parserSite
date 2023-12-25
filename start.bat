@@ -1,8 +1,6 @@
 @echo off
 
-
-call %~dp0venv\Scripts\activate
-
+call "%cd%\venv\Scripts\activate"
 python main.py
 
 pause
