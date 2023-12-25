@@ -3,7 +3,7 @@ import requests
 import sys
 
 
-def getLinks(links: list, site: str, template: str) -> list:
+def getList(links: list, site: str, template: str) -> list:
     print(f'Checked: {site}')
     response = requests.get(site)
     soup = BeautifulSoup(response.text, "lxml")
@@ -15,23 +15,38 @@ def getLinks(links: list, site: str, template: str) -> list:
                     print(f"Added: {lists.get('href')}")
     return links
 
+# def getLinks(params):
 
 if __name__ == "__main__":
     params = sys.argv
+    links = []
     if len(params) > 1:
-        links = []
+
         for i in range(1, len(params)):
             url = params[i]
             response = requests.get(url)
             links.append(url)
 
             for link in links:
-                # print(links)
-                # print('\n============================\n')
-                links = getLinks(links, link, url).copy()
+                links = getList(links, link, url).copy()
 
         with open('links.txt', 'w') as f:
             for link in links:
                 f.write(link + '\n')
     else:
-        print("Введите сайты через пробел")
+        with open("sites.txt") as sites:
+            params = sites.readlines()
+            if len(params) > 0:
+                for i in range(0, len(params)):
+                    url = params[i].strip()
+                    response = requests.get(url)
+                    links.append(url)
+
+                    for link in links:
+                        links = getList(links, link, url).copy()
+            else:
+                print("Введите сайты через пробел")
+
+
+
+
