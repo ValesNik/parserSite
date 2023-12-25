@@ -1,0 +1,15 @@
+1. Заполнить список сайтов в файле sites.txt
+2. Запустить программу;
+3. Посмотреть результат в links.txt
+
+
+2 способа запуска программы:
+1) Через консоль: 
+
+С:/parcerSite> venv/Scripts/activate
+1.1 Если заполнили список сайтов в файле sites.txt:
+С:/parcerSite> python main.py 
+1.2 Если не заполнили список сайтов в файле sites.txt:
+С:/parcerSite> python main.py http:/site.ru https:/site.ru
+
+2) Через файл start.bat.
