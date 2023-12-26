@@ -2,20 +2,24 @@ from bs4 import BeautifulSoup
 import requests
 import sys
 import re
+import urllib
 
 except_file = []
 
 def getList(links: list, site: str, template: str) -> list:
-    # print(f'Checked: {site}')
+    print(f'Checked: {site}')
     response = requests.get(site)
+    response.encoding = "utf-8"
+    code = "cp1251"
     soup = BeautifulSoup(response.text, "lxml")
     for lists in soup.find_all('a'):
         if lists.get('href') != None:
             if template in lists.get('href'):
                 if not set(except_file) & set(lists.get('href').split('.')):
                     if lists.get('href') not in links:
-                        links.append(lists.get('href'))
-                        # print(f"Added: {lists.get('href')}")
+                        link = urllib.parse.unquote(lists.get('href'))
+                        links.append(link)
+                        print(f"Added: {link}")
     return links
 
 def getUrlSite(url: str):
@@ -24,10 +28,13 @@ def getUrlSite(url: str):
 
 if __name__ == "__main__":
     params = sys.argv
+
     main_links = []
+
     with open("exept.txt") as f:
         except_format = f.readlines()
         except_file = [line.rstrip() for line in except_format]
+
     if len(params) > 1:
         for i in range(1, len(params)):
             print(f"Start parse : {params[i]}")
@@ -50,12 +57,12 @@ if __name__ == "__main__":
 
                     for link in links:
                         links = getList(links, link, url).copy()
-                    print(links)
                     main_links = list(set(main_links + links))
                     print("===============================================================\n=================================================")
             else:
                 print("Введите сайты через пробел или в файл")
-    with open('links.txt', 'w') as f:
+    main_links.sort()
+    with open('links.txt', 'w', encoding='utf8') as f:
         for link in main_links:
             f.write(link + '\n')
 
